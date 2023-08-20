@@ -59,7 +59,7 @@ func main() {
 
 	v1Router.Post("/register", apiCfg.HandlerRegister)
 	v1Router.Post("/login", apiCfg.HandlerLogin)
-	v1Router.Get("/session", apiCfg.HandlerSession)
+	v1Router.Get("/session", middlewares.MiddlewareAuth(apiCfg.HandlerSession))
 	v1Router.Get("/logout", apiCfg.HandlerLogout)
 
 	router.Mount("/v1", v1Router)
