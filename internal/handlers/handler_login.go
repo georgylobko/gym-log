@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
@@ -11,8 +12,6 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
-
-const SecretKey = "secret"
 
 func (apiCfg *ApiConfig) HandlerLogin(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
@@ -45,7 +44,14 @@ func (apiCfg *ApiConfig) HandlerLogin(w http.ResponseWriter, r *http.Request) {
 		Issuer:    strconv.Itoa(int(user.ID)),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	ss, err := token.SignedString([]byte(SecretKey))
+
+	secretString := os.Getenv("JWT_SECRET")
+	if secretString == "" {
+		helpers.RespondWithError(w, 500, fmt.Sprintf("Something went wrong: %s", err))
+		return
+	}
+
+	ss, err := token.SignedString([]byte(secretString))
 	if err != nil {
 		helpers.RespondWithError(w, 500, fmt.Sprintf("Something went wrong: %s", err))
 		return

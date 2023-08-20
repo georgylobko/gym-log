@@ -67,6 +67,7 @@ func main() {
 	}
 
 	fmt.Printf("Server starting on port %v", portString)
+	fmt.Println("")
 
 	err = srv.ListenAndServe()
 	if err != nil {
