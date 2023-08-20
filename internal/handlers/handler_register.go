@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 	"database/sql"
@@ -7,10 +7,11 @@ import (
 	"net/http"
 
 	"github.com/georgylobko/gym-log/internal/database"
+	"github.com/georgylobko/gym-log/internal/helpers"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (apiCfg *apiConfig) handlerRegister(w http.ResponseWriter, r *http.Request) {
+func (apiCfg *ApiConfig) HandlerRegister(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
 		Name     string `json:"name"`
 		Gender   string `json:"gender"`
@@ -23,7 +24,7 @@ func (apiCfg *apiConfig) handlerRegister(w http.ResponseWriter, r *http.Request)
 	params := parameters{}
 	err := decoder.Decode(&params)
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Error parsing JSON: %s", err))
+		helpers.RespondWithError(w, 400, fmt.Sprintf("Error parsing JSON: %s", err))
 		return
 	}
 
@@ -38,9 +39,9 @@ func (apiCfg *apiConfig) handlerRegister(w http.ResponseWriter, r *http.Request)
 		Password: passwordHash,
 	})
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Could not create user: %s", err))
+		helpers.RespondWithError(w, 400, fmt.Sprintf("Could not create user: %s", err))
 		return
 	}
 
-	respondWithJSON(w, 200, user)
+	helpers.RespondWithJSON(w, 200, user)
 }

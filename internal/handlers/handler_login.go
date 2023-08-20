@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 	"encoding/json"
@@ -7,13 +7,14 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/georgylobko/gym-log/internal/helpers"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
 const SecretKey = "secret"
 
-func (apiCfg *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
+func (apiCfg *ApiConfig) HandlerLogin(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
 		Email    string `json:"email"`
 		Password string `json:"password"`
@@ -23,19 +24,19 @@ func (apiCfg *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
 	params := parameters{}
 	err := decoder.Decode(&params)
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Error parsing JSON: %s", err))
+		helpers.RespondWithError(w, 400, fmt.Sprintf("Error parsing JSON: %s", err))
 		return
 	}
 
 	user, err := apiCfg.DB.GetUserByEmail(r.Context(), params.Email)
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Could not get user: %s", err))
+		helpers.RespondWithError(w, 400, fmt.Sprintf("Could not get user: %s", err))
 		return
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(params.Password))
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Password is not valid: %s", err))
+		helpers.RespondWithError(w, 400, fmt.Sprintf("Password is not valid: %s", err))
 		return
 	}
 
@@ -46,7 +47,7 @@ func (apiCfg *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	ss, err := token.SignedString([]byte(SecretKey))
 	if err != nil {
-		respondWithError(w, 500, fmt.Sprintf("Something went wrong: %s", err))
+		helpers.RespondWithError(w, 500, fmt.Sprintf("Something went wrong: %s", err))
 		return
 	}
 
@@ -60,5 +61,5 @@ func (apiCfg *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, &cookie)
 
-	respondWithJSON(w, 200, user)
+	helpers.RespondWithJSON(w, 200, user)
 }

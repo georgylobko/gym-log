@@ -8,15 +8,12 @@ import (
 	"os"
 
 	"github.com/georgylobko/gym-log/internal/database"
+	"github.com/georgylobko/gym-log/internal/handlers"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
-
-type apiConfig struct {
-	DB *database.Queries
-}
 
 func main() {
 	godotenv.Load(".env")
@@ -37,7 +34,7 @@ func main() {
 	}
 
 	queries := database.New(conn)
-	apiCfg := apiConfig{
+	apiCfg := handlers.ApiConfig{
 		DB: queries,
 	}
 
@@ -54,13 +51,13 @@ func main() {
 
 	v1Router := chi.NewRouter()
 
-	v1Router.Get("/healthz", handlerReadiness)
-	v1Router.Get("/err", handlerErr)
-	v1Router.Post("/muscle-groups", apiCfg.handlerCreateMuscleGroup)
-	v1Router.Post("/register", apiCfg.handlerRegister)
-	v1Router.Post("/login", apiCfg.handlerLogin)
-	v1Router.Get("/session", apiCfg.handlerSession)
-	v1Router.Get("/logout", apiCfg.handlerLogout)
+	v1Router.Get("/healthz", handlers.HandlerReadiness)
+	v1Router.Get("/err", handlers.HandlerErr)
+	v1Router.Post("/muscle-groups", apiCfg.HandlerCreateMuscleGroup)
+	v1Router.Post("/register", apiCfg.HandlerRegister)
+	v1Router.Post("/login", apiCfg.HandlerLogin)
+	v1Router.Get("/session", apiCfg.HandlerSession)
+	v1Router.Get("/logout", apiCfg.HandlerLogout)
 
 	router.Mount("/v1", v1Router)
 

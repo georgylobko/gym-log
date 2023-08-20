@@ -1,11 +1,13 @@
-package main
+package handlers
 
 import (
 	"net/http"
 	"time"
+
+	"github.com/georgylobko/gym-log/internal/helpers"
 )
 
-func (apiCfg *apiConfig) handlerLogout(w http.ResponseWriter, r *http.Request) {
+func (apiCfg *ApiConfig) HandlerLogout(w http.ResponseWriter, r *http.Request) {
 	cookie := http.Cookie{
 		Name:     "token",
 		Value:    "",
@@ -16,5 +18,5 @@ func (apiCfg *apiConfig) handlerLogout(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, &cookie)
 
-	respondWithJSON(w, 200, struct{}{})
+	helpers.RespondWithJSON(w, 200, struct{}{})
 }

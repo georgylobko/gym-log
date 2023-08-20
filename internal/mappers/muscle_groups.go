@@ -1,4 +1,4 @@
-package main
+package mappers
 
 import "github.com/georgylobko/gym-log/internal/database"
 
@@ -8,7 +8,7 @@ type MuscleGroup struct {
 	PhotoUrl string `json:"photo_url"`
 }
 
-func databaseMuscleGroupToMuscleGroup(dbMuscleGroup database.MuscleGroup) MuscleGroup {
+func DatabaseMuscleGroupToMuscleGroup(dbMuscleGroup database.MuscleGroup) MuscleGroup {
 	return MuscleGroup{
 		ID:       dbMuscleGroup.ID,
 		Name:     dbMuscleGroup.Name,
