@@ -9,6 +9,7 @@ import (
 
 	"github.com/georgylobko/gym-log/internal/database"
 	"github.com/georgylobko/gym-log/internal/handlers"
+	"github.com/georgylobko/gym-log/internal/middlewares"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
@@ -50,10 +51,12 @@ func main() {
 	}))
 
 	v1Router := chi.NewRouter()
-
 	v1Router.Get("/healthz", handlers.HandlerReadiness)
 	v1Router.Get("/err", handlers.HandlerErr)
-	v1Router.Post("/muscle-groups", apiCfg.HandlerCreateMuscleGroup)
+
+	v1Router.Post("/muscle-groups", middlewares.MiddlewareAuth(apiCfg.HandlerCreateMuscleGroup))
+	v1Router.Get("/muscle-groups", middlewares.MiddlewareAuth(apiCfg.HandlerGetMuscleGroups))
+
 	v1Router.Post("/register", apiCfg.HandlerRegister)
 	v1Router.Post("/login", apiCfg.HandlerLogin)
 	v1Router.Get("/session", apiCfg.HandlerSession)

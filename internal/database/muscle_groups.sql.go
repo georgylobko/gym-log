@@ -26,3 +26,30 @@ func (q *Queries) CreateMuscleGroup(ctx context.Context, arg CreateMuscleGroupPa
 	err := row.Scan(&i.ID, &i.Name, &i.PhotoUrl)
 	return i, err
 }
+
+const getMuscleGroups = `-- name: GetMuscleGroups :many
+SELECT id, name, photo_url FROM muscle_groups
+`
+
+func (q *Queries) GetMuscleGroups(ctx context.Context) ([]MuscleGroup, error) {
+	rows, err := q.db.QueryContext(ctx, getMuscleGroups)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []MuscleGroup
+	for rows.Next() {
+		var i MuscleGroup
+		if err := rows.Scan(&i.ID, &i.Name, &i.PhotoUrl); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
