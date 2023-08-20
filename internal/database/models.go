@@ -4,10 +4,21 @@
 
 package database
 
-import ()
+import (
+	"database/sql"
+)
 
 type MuscleGroup struct {
 	ID       int32
 	Name     string
 	PhotoUrl string
+}
+
+type User struct {
+	ID       int32
+	Name     string
+	Gender   sql.NullString
+	Role     string
+	Email    string
+	Password string
 }
