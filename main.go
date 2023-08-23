@@ -55,6 +55,9 @@ func main() {
 	v1Router.Post("/muscle-groups", middlewares.MiddlewareAuth(apiCfg.HandlerCreateMuscleGroup))
 	v1Router.Get("/muscle-groups", middlewares.MiddlewareAuth(apiCfg.HandlerGetMuscleGroups))
 
+	v1Router.Post("/exercises", middlewares.MiddlewareAuth(apiCfg.HandlerCreateExercise))
+	v1Router.Get("/exercises/{exerciseID}", middlewares.MiddlewareAuth(apiCfg.HandlerGetExercise))
+
 	v1Router.Post("/register", apiCfg.HandlerRegister)
 	v1Router.Post("/login", apiCfg.HandlerLogin)
 	v1Router.Get("/session", middlewares.MiddlewareAuth(apiCfg.HandlerSession))

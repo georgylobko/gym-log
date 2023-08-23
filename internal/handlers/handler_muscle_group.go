@@ -16,7 +16,6 @@ func (apiCfg *ApiConfig) HandlerCreateMuscleGroup(w http.ResponseWriter, r *http
 		PhotoUrl string `json:"photo_url"`
 	}
 	decoder := json.NewDecoder(r.Body)
-	fmt.Println("userID: ", userID)
 
 	params := parameters{}
 	err := decoder.Decode(&params)

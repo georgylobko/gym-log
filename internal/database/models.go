@@ -8,6 +8,18 @@ import (
 	"database/sql"
 )
 
+type Exercise struct {
+	ID       int32
+	Name     string
+	PhotoUrl string
+}
+
+type ExercisesMuscleGroup struct {
+	ID            int32
+	ExerciseID    int32
+	MuscleGroupID int32
+}
+
 type MuscleGroup struct {
 	ID       int32
 	Name     string

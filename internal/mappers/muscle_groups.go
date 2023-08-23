@@ -15,3 +15,13 @@ func DatabaseMuscleGroupToMuscleGroup(dbMuscleGroup database.MuscleGroup) Muscle
 		PhotoUrl: dbMuscleGroup.PhotoUrl,
 	}
 }
+
+func DatabaseMuscleGroupsToMuscleGroups(dbMuscleGroups []database.MuscleGroup) []MuscleGroup {
+	muscleGroups := []MuscleGroup{}
+
+	for _, dbMudbMuscleGroup := range dbMuscleGroups {
+		muscleGroups = append(muscleGroups, DatabaseMuscleGroupToMuscleGroup(dbMudbMuscleGroup))
+	}
+
+	return muscleGroups
+}
