@@ -71,3 +71,13 @@ func (apiCfg *ApiConfig) HandlerGetExercise(w http.ResponseWriter, r *http.Reque
 
 	helpers.RespondWithJSON(w, 200, mappers.DatabaseExerciseToExercise(exercise, muscleGroups))
 }
+
+func (apiCfg *ApiConfig) HandlerGetExercises(w http.ResponseWriter, r *http.Request, userID string) {
+	exercises, err := apiCfg.DB.GetExircises(r.Context())
+	if err != nil {
+		helpers.RespondWithError(w, 400, fmt.Sprintf("Could not get exercise: %s", err))
+		return
+	}
+
+	helpers.RespondWithJSON(w, 200, exercises)
+}

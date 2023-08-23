@@ -7,6 +7,8 @@ package database
 
 import (
 	"context"
+
+	"github.com/lib/pq"
 )
 
 const createExercise = `-- name: CreateExercise :one
@@ -37,4 +39,55 @@ func (q *Queries) GetExerciseById(ctx context.Context, id int32) (Exercise, erro
 	var i Exercise
 	err := row.Scan(&i.ID, &i.Name, &i.PhotoUrl)
 	return i, err
+}
+
+const getExircises = `-- name: GetExircises :many
+SELECT
+    e.id,
+    e.name,
+    e.photo_url,
+    ARRAY_AGG(m.name)::TEXT[] AS muscle_groups
+FROM
+    exercises AS e
+LEFT JOIN
+    exercises_muscle_groups AS emg ON e.id = emg.exercise_id
+LEFT JOIN
+    muscle_groups AS m ON emg.muscle_group_id = m.id
+GROUP BY
+    e.id, e.name, e.photo_url
+`
+
+type GetExircisesRow struct {
+	ID           int32
+	Name         string
+	PhotoUrl     string
+	MuscleGroups []string
+}
+
+func (q *Queries) GetExircises(ctx context.Context) ([]GetExircisesRow, error) {
+	rows, err := q.db.QueryContext(ctx, getExircises)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetExircisesRow
+	for rows.Next() {
+		var i GetExircisesRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.PhotoUrl,
+			pq.Array(&i.MuscleGroups),
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

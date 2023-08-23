@@ -57,6 +57,7 @@ func main() {
 
 	v1Router.Post("/exercises", middlewares.MiddlewareAuth(apiCfg.HandlerCreateExercise))
 	v1Router.Get("/exercises/{exerciseID}", middlewares.MiddlewareAuth(apiCfg.HandlerGetExercise))
+	v1Router.Get("/exercises", middlewares.MiddlewareAuth(apiCfg.HandlerGetExercises))
 
 	v1Router.Post("/register", apiCfg.HandlerRegister)
 	v1Router.Post("/login", apiCfg.HandlerLogin)

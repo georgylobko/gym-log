@@ -10,7 +10,6 @@ type Exercise struct {
 }
 
 func DatabaseExerciseToExercise(dbExercise database.Exercise, dbMuscleGroups []database.MuscleGroup) Exercise {
-
 	return Exercise{
 		ID:           dbExercise.ID,
 		Name:         dbExercise.Name,
