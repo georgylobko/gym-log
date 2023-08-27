@@ -63,6 +63,9 @@ func main() {
 	v1Router.Get("/workouts", middlewares.MiddlewareAuth(apiCfg.HandlerGetWorkouts))
 	v1Router.Put("/workouts", middlewares.MiddlewareAuth(apiCfg.HandlerUpdateWorkout))
 
+	v1Router.Post("/sets", middlewares.MiddlewareAuth(apiCfg.HandlerCreateSet))
+	v1Router.Get("/sets", middlewares.MiddlewareAuth(apiCfg.HandlerGetSets))
+
 	v1Router.Post("/register", apiCfg.HandlerRegister)
 	v1Router.Post("/login", apiCfg.HandlerLogin)
 	v1Router.Get("/session", middlewares.MiddlewareAuth(apiCfg.HandlerSession))

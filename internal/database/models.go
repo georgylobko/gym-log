@@ -27,6 +27,14 @@ type MuscleGroup struct {
 	PhotoUrl string
 }
 
+type Set struct {
+	ID         int32
+	WorkoutID  int32
+	ExerciseID int32
+	Reps       int32
+	Weight     int32
+}
+
 type User struct {
 	ID       int32
 	Name     string
