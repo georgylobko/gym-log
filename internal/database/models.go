@@ -6,6 +6,7 @@ package database
 
 import (
 	"database/sql"
+	"time"
 )
 
 type Exercise struct {
@@ -33,4 +34,11 @@ type User struct {
 	Role     string
 	Email    string
 	Password string
+}
+
+type Workout struct {
+	ID        int32
+	UserID    int32
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
