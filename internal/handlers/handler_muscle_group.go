@@ -43,7 +43,5 @@ func (apiCfg *ApiConfig) HandlerGetMuscleGroups(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	fmt.Println("userID: ", userID)
-
-	helpers.RespondWithJSON(w, 200, muscleGroups)
+	helpers.RespondWithJSON(w, 200, mappers.DatabaseMuscleGroupsToMuscleGroups(muscleGroups))
 }
