@@ -38,7 +38,7 @@ func (apiCfg *ApiConfig) HandlerCreateSet(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	helpers.RespondWithJSON(w, 200, set)
+	helpers.RespondWithJSON(w, 200, mappers.DatabaseSetToSet(set))
 }
 
 func (apiCfg *ApiConfig) HandlerGetSets(w http.ResponseWriter, r *http.Request, user mappers.User) {
@@ -53,7 +53,7 @@ func (apiCfg *ApiConfig) HandlerGetSets(w http.ResponseWriter, r *http.Request, 
 			return
 		}
 
-		helpers.RespondWithJSON(w, 200, sets)
+		helpers.RespondWithJSON(w, 200, mappers.DatabaseSetsToSets(sets))
 	} else {
 		sets, err := apiCfg.DB.GetSets(r.Context())
 		if err != nil {
@@ -61,6 +61,6 @@ func (apiCfg *ApiConfig) HandlerGetSets(w http.ResponseWriter, r *http.Request, 
 			return
 		}
 
-		helpers.RespondWithJSON(w, 200, sets)
+		helpers.RespondWithJSON(w, 200, mappers.DatabaseSetsToSets(sets))
 	}
 }
