@@ -79,5 +79,5 @@ func (apiCfg *ApiConfig) HandlerGetExercises(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	helpers.RespondWithJSON(w, 200, exercises)
+	helpers.RespondWithJSON(w, 200, mappers.DatabaseExercisesToExercises(exercises))
 }
