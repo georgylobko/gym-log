@@ -8,6 +8,7 @@ import (
 
 	"github.com/georgylobko/gym-log/internal/database"
 	"github.com/georgylobko/gym-log/internal/helpers"
+	"github.com/georgylobko/gym-log/internal/mappers"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -43,5 +44,5 @@ func (apiCfg *ApiConfig) HandlerRegister(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	helpers.RespondWithJSON(w, 200, user)
+	helpers.RespondWithJSON(w, 200, mappers.DatabaseUserToUser(user))
 }
