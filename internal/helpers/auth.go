@@ -4,30 +4,33 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/georgylobko/gym-log/internal/mappers"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func GetParsedToken(w http.ResponseWriter, r *http.Request) (string, error) {
+type Claims struct {
+	User mappers.User `json:"user"`
+	jwt.RegisteredClaims
+}
+
+func GetParsedToken(w http.ResponseWriter, r *http.Request) (mappers.User, error) {
 	tokenCookie, err := r.Cookie("token")
 	if err != nil {
-		return "", err
+		return mappers.User{}, err
 	}
 	secretString := os.Getenv("JWT_SECRET")
 	if secretString == "" {
-		return "", err
+		return mappers.User{}, err
 	}
-	token, err := jwt.ParseWithClaims(tokenCookie.Value, &jwt.RegisteredClaims{}, func(t *jwt.Token) (interface{}, error) {
+
+	token, err := jwt.ParseWithClaims(tokenCookie.Value, &Claims{}, func(t *jwt.Token) (interface{}, error) {
 		return []byte(secretString), nil
 	})
 	if err != nil {
-		return "", err
+		return mappers.User{}, err
 	}
 
-	claims := token.Claims
-	issuer, err := claims.GetIssuer()
-	if err != nil {
-		return "", err
-	}
+	claims := token.Claims.(*Claims)
 
-	return issuer, nil
+	return claims.User, nil
 }

@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/georgylobko/gym-log/internal/helpers"
+	"github.com/georgylobko/gym-log/internal/mappers"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -39,9 +40,12 @@ func (apiCfg *ApiConfig) HandlerLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	claims := &jwt.RegisteredClaims{
-		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
-		Issuer:    strconv.Itoa(int(user.ID)),
+	claims := helpers.Claims{
+		mappers.DatabaseUserToUser(user),
+		jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
+			Issuer:    strconv.Itoa(int(user.ID)),
+		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
@@ -67,5 +71,5 @@ func (apiCfg *ApiConfig) HandlerLogin(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, &cookie)
 
-	helpers.RespondWithJSON(w, 200, user)
+	helpers.RespondWithJSON(w, 200, mappers.DatabaseUserToUser(user))
 }

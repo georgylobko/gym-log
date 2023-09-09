@@ -4,17 +4,16 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/georgylobko/gym-log/internal/database"
 	"github.com/georgylobko/gym-log/internal/helpers"
+	"github.com/georgylobko/gym-log/internal/mappers"
 )
 
-func (apiCfg *ApiConfig) HandlerCreateWorkout(w http.ResponseWriter, r *http.Request, userID string) {
-	parsedUserId, _ := strconv.ParseInt(userID, 10, 32)
+func (apiCfg *ApiConfig) HandlerCreateWorkout(w http.ResponseWriter, r *http.Request, user mappers.User) {
 	workout, err := apiCfg.DB.CreateWorkout(r.Context(), database.CreateWorkoutParams{
-		UserID:    int32(parsedUserId),
+		UserID:    user.ID,
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 	})
@@ -26,7 +25,7 @@ func (apiCfg *ApiConfig) HandlerCreateWorkout(w http.ResponseWriter, r *http.Req
 	helpers.RespondWithJSON(w, 200, workout)
 }
 
-func (apiCfg *ApiConfig) HandlerUpdateWorkout(w http.ResponseWriter, r *http.Request, userID string) {
+func (apiCfg *ApiConfig) HandlerUpdateWorkout(w http.ResponseWriter, r *http.Request, user mappers.User) {
 	type parameters struct {
 		ID int32 `json:"id"`
 	}
@@ -57,9 +56,8 @@ func (apiCfg *ApiConfig) HandlerUpdateWorkout(w http.ResponseWriter, r *http.Req
 	helpers.RespondWithJSON(w, 200, struct{}{})
 }
 
-func (apiCfg *ApiConfig) HandlerGetWorkouts(w http.ResponseWriter, r *http.Request, userID string) {
-	parsedUserId, _ := strconv.ParseInt(userID, 10, 32)
-	workouts, err := apiCfg.DB.GetWorkoutsByUserId(r.Context(), int32(parsedUserId))
+func (apiCfg *ApiConfig) HandlerGetWorkouts(w http.ResponseWriter, r *http.Request, user mappers.User) {
+	workouts, err := apiCfg.DB.GetWorkoutsByUserId(r.Context(), user.ID)
 	if err != nil {
 		helpers.RespondWithError(w, 400, fmt.Sprintf("Could not get the db entity: %s", err))
 		return

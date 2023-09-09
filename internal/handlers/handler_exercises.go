@@ -12,7 +12,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-func (apiCfg *ApiConfig) HandlerCreateExercise(w http.ResponseWriter, r *http.Request, userID string) {
+func (apiCfg *ApiConfig) HandlerCreateExercise(w http.ResponseWriter, r *http.Request, user mappers.User) {
 	type parameters struct {
 		Name            string `json:"name"`
 		PhotoUrl        string `json:"photo_url"`
@@ -50,7 +50,7 @@ func (apiCfg *ApiConfig) HandlerCreateExercise(w http.ResponseWriter, r *http.Re
 	helpers.RespondWithJSON(w, 200, struct{}{})
 }
 
-func (apiCfg *ApiConfig) HandlerGetExercise(w http.ResponseWriter, r *http.Request, userID string) {
+func (apiCfg *ApiConfig) HandlerGetExercise(w http.ResponseWriter, r *http.Request, user mappers.User) {
 	exerciseIDStr := chi.URLParam(r, "exerciseID")
 	exerciseID, err := strconv.Atoi(exerciseIDStr)
 	if err != nil {
@@ -72,7 +72,7 @@ func (apiCfg *ApiConfig) HandlerGetExercise(w http.ResponseWriter, r *http.Reque
 	helpers.RespondWithJSON(w, 200, mappers.DatabaseExerciseToExercise(exercise, muscleGroups))
 }
 
-func (apiCfg *ApiConfig) HandlerGetExercises(w http.ResponseWriter, r *http.Request, userID string) {
+func (apiCfg *ApiConfig) HandlerGetExercises(w http.ResponseWriter, r *http.Request, user mappers.User) {
 	exercises, err := apiCfg.DB.GetExircises(r.Context())
 	if err != nil {
 		helpers.RespondWithError(w, 400, fmt.Sprintf("Could not get exercise: %s", err))

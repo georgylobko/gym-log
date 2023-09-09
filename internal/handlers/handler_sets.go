@@ -8,9 +8,10 @@ import (
 
 	"github.com/georgylobko/gym-log/internal/database"
 	"github.com/georgylobko/gym-log/internal/helpers"
+	"github.com/georgylobko/gym-log/internal/mappers"
 )
 
-func (apiCfg *ApiConfig) HandlerCreateSet(w http.ResponseWriter, r *http.Request, userID string) {
+func (apiCfg *ApiConfig) HandlerCreateSet(w http.ResponseWriter, r *http.Request, user mappers.User) {
 	type parameters struct {
 		WorkoutID  int32 `json:"workout_id"`
 		ExerciseID int32 `json:"exercise_id"`
@@ -40,7 +41,7 @@ func (apiCfg *ApiConfig) HandlerCreateSet(w http.ResponseWriter, r *http.Request
 	helpers.RespondWithJSON(w, 200, set)
 }
 
-func (apiCfg *ApiConfig) HandlerGetSets(w http.ResponseWriter, r *http.Request, userID string) {
+func (apiCfg *ApiConfig) HandlerGetSets(w http.ResponseWriter, r *http.Request, user mappers.User) {
 	query := r.URL.Query()
 	workoutID := query.Get("workout_id")
 

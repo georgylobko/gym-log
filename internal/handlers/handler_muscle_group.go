@@ -10,7 +10,7 @@ import (
 	"github.com/georgylobko/gym-log/internal/mappers"
 )
 
-func (apiCfg *ApiConfig) HandlerCreateMuscleGroup(w http.ResponseWriter, r *http.Request, userID string) {
+func (apiCfg *ApiConfig) HandlerCreateMuscleGroup(w http.ResponseWriter, r *http.Request, user mappers.User) {
 	type parameters struct {
 		Name     string `json:"name"`
 		PhotoUrl string `json:"photo_url"`
@@ -36,7 +36,7 @@ func (apiCfg *ApiConfig) HandlerCreateMuscleGroup(w http.ResponseWriter, r *http
 	helpers.RespondWithJSON(w, 200, mappers.DatabaseMuscleGroupToMuscleGroup(muscleGroup))
 }
 
-func (apiCfg *ApiConfig) HandlerGetMuscleGroups(w http.ResponseWriter, r *http.Request, userID string) {
+func (apiCfg *ApiConfig) HandlerGetMuscleGroups(w http.ResponseWriter, r *http.Request, user mappers.User) {
 	muscleGroups, err := apiCfg.DB.GetMuscleGroups(r.Context())
 	if err != nil {
 		helpers.RespondWithError(w, 400, fmt.Sprintf("Could not get muscle groups: %s", err))
