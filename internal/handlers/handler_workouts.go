@@ -22,7 +22,7 @@ func (apiCfg *ApiConfig) HandlerCreateWorkout(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	helpers.RespondWithJSON(w, 200, workout)
+	helpers.RespondWithJSON(w, 200, mappers.DatabaseWorkoutToWorkout(workout))
 }
 
 func (apiCfg *ApiConfig) HandlerUpdateWorkout(w http.ResponseWriter, r *http.Request, user mappers.User) {
@@ -63,5 +63,5 @@ func (apiCfg *ApiConfig) HandlerGetWorkouts(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	helpers.RespondWithJSON(w, 200, workouts)
+	helpers.RespondWithJSON(w, 200, mappers.DatabaseWorkoutsToWorkouts(workouts))
 }
