@@ -24,15 +24,19 @@ func main() {
 		log.Fatal("PORT is not found in env")
 	}
 
-	dbUrl := os.Getenv("DB_URL")
-	if dbUrl == "" {
-		log.Fatal("DB_URL is not found in the env")
-	}
+	dbHost := os.Getenv("RDS_HOSTNAME")
+	dbPort := os.Getenv("RDS_PORT")
+	dbUser := os.Getenv("RDS_USERNAME")
+	dbPassword := os.Getenv("RDS_PASSWORD")
+	dbName := os.Getenv("RDS_DB_NAME")
+	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		dbHost, dbPort, dbUser, dbPassword, dbName)
 
-	conn, err := sql.Open("postgres", dbUrl)
+	conn, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal("Cannot connect to database")
 	}
+	conn.Ping()
 
 	queries := database.New(conn)
 	apiCfg := handlers.ApiConfig{
