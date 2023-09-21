@@ -56,6 +56,10 @@ func main() {
 
 	v1Router := chi.NewRouter()
 
+	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("welcome"))
+	})
+
 	v1Router.Post("/muscle-groups", middlewares.MiddlewareAuth(apiCfg.HandlerCreateMuscleGroup))
 	v1Router.Get("/muscle-groups", middlewares.MiddlewareAuth(apiCfg.HandlerGetMuscleGroups))
 
