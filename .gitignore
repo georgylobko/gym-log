@@ -1,5 +1,7 @@
 .vscode/
 bin/
+gym-log
+application
 .env
 .DS_Store
 # Elastic Beanstalk Files
