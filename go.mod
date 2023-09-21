@@ -16,3 +16,5 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.0.0
 	golang.org/x/crypto v0.12.0
 )
+
+require github.com/pressly/goose/v3 v3.15.0

@@ -14,7 +14,10 @@ import (
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	"github.com/pressly/goose/v3"
 )
+
+// var embedMigrations embed.FS
 
 func main() {
 	godotenv.Load(".env")
@@ -41,6 +44,15 @@ func main() {
 	queries := database.New(conn)
 	apiCfg := handlers.ApiConfig{
 		DB: queries,
+	}
+
+	// run migrations
+	goose.SetBaseFS(nil)
+	if err := goose.SetDialect("postgres"); err != nil {
+		panic(err)
+	}
+	if err := goose.Up(conn, "sql/schema"); err != nil {
+		panic(err)
 	}
 
 	router := chi.NewRouter()
