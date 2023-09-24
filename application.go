@@ -32,10 +32,13 @@ func main() {
 	dbUser := os.Getenv("RDS_USERNAME")
 	dbPassword := os.Getenv("RDS_PASSWORD")
 	dbName := os.Getenv("RDS_DB_NAME")
-	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=enable",
+	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		dbHost, dbPort, dbUser, dbPassword, dbName)
 
+	fmt.Println(connStr)
+
 	conn, err := sql.Open("postgres", connStr)
+	fmt.Println("here")
 	if err != nil {
 		log.Fatal("Cannot connect to database")
 	}
