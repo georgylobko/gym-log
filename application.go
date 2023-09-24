@@ -52,7 +52,7 @@ func main() {
 		panic(err)
 	}
 	if err := goose.Up(conn, "sql/schema"); err != nil {
-		fmt.Println("Could not run migrations: ", err)
+		fmt.Println("Could not run migrations: ", connStr, err)
 	}
 
 	router := chi.NewRouter()
