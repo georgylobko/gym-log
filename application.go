@@ -32,7 +32,7 @@ func main() {
 	dbUser := os.Getenv("RDS_USERNAME")
 	dbPassword := os.Getenv("RDS_PASSWORD")
 	dbName := os.Getenv("RDS_DB_NAME")
-	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
 		dbHost, dbPort, dbUser, dbPassword, dbName)
 
 	fmt.Println(connStr)
