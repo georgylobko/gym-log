@@ -17,8 +17,6 @@ import (
 	"github.com/pressly/goose/v3"
 )
 
-// var embedMigrations embed.FS
-
 func main() {
 	godotenv.Load(".env")
 
@@ -32,13 +30,10 @@ func main() {
 	dbUser := os.Getenv("RDS_USERNAME")
 	dbPassword := os.Getenv("RDS_PASSWORD")
 	dbName := os.Getenv("RDS_DB_NAME")
-	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
+	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		dbHost, dbPort, dbUser, dbPassword, dbName)
 
-	fmt.Println(connStr)
-
 	conn, err := sql.Open("postgres", connStr)
-	fmt.Println("here")
 	if err != nil {
 		log.Fatal("Cannot connect to database")
 	}
@@ -55,7 +50,7 @@ func main() {
 		panic(err)
 	}
 	if err := goose.Up(conn, "sql/schema"); err != nil {
-		fmt.Println("Could not run migrations: ", connStr, err)
+		fmt.Println("Could not run migrations: ", err)
 	}
 
 	router := chi.NewRouter()
