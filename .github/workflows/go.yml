@@ -25,4 +25,4 @@ jobs:
     #   run: go build -v
 
     - name: Test
-      run: go test github.com/georgylobko/gym-log/internal/mappers -v
+      run: go test github.com/georgylobko/gym-log/internal/mappers -v && go test github.com/georgylobko/gym-log/internal/handlers -v
