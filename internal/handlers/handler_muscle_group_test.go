@@ -24,7 +24,7 @@ func TestHandlerGetMuscleGroups(t *testing.T) {
 		DB: queries,
 	}
 
-	t.Run("return muscle groups", func(t *testing.T) {
+	t.Run("should return muscle groups", func(t *testing.T) {
 		rows := sqlmock.NewRows([]string{"id", "name", "photo_url"}).
 			AddRow(1, "Biceps", "https://placeholder/biceps.png")
 		mock.ExpectQuery("SELECT id, name, photo_url FROM muscle_groups").
@@ -64,7 +64,19 @@ func TestHandlerCreateMuscleGroup(t *testing.T) {
 		DB: queries,
 	}
 
-	t.Run("create muscle group", func(t *testing.T) {
+	t.Run("should return 400 error code when user input is invalid", func(t *testing.T) {
+		requestBody := `{"name": "Triceps"}`
+		r, _ := http.NewRequest("POST", "/create-muscle-group", bytes.NewBufferString(requestBody))
+		w := httptest.NewRecorder()
+
+		apiCfg.HandlerCreateMuscleGroup(w, r, mappers.User{})
+
+		apiCfg.HandlerCreateMuscleGroup(w, r, mappers.User{})
+
+		assert.Equal(t, http.StatusBadRequest, w.Code)
+	})
+
+	t.Run("should create muscle group if user input is valid", func(t *testing.T) {
 		requestBody := `{"name": "Triceps", "photo_url": "https://placeholder/triceps.png"}`
 		r, _ := http.NewRequest("POST", "/create-muscle-group", bytes.NewBufferString(requestBody))
 		w := httptest.NewRecorder()

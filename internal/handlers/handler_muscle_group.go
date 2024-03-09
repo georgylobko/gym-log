@@ -8,12 +8,13 @@ import (
 	"github.com/georgylobko/gym-log/internal/database"
 	"github.com/georgylobko/gym-log/internal/helpers"
 	"github.com/georgylobko/gym-log/internal/mappers"
+	"github.com/go-playground/validator/v10"
 )
 
 func (apiCfg *ApiConfig) HandlerCreateMuscleGroup(w http.ResponseWriter, r *http.Request, user mappers.User) {
 	type parameters struct {
-		Name     string `json:"name"`
-		PhotoUrl string `json:"photo_url"`
+		Name     string `json:"name" validate:"required"`
+		PhotoUrl string `json:"photo_url" validate:"required"`
 	}
 	decoder := json.NewDecoder(r.Body)
 
@@ -21,6 +22,15 @@ func (apiCfg *ApiConfig) HandlerCreateMuscleGroup(w http.ResponseWriter, r *http
 	err := decoder.Decode(&params)
 	if err != nil {
 		helpers.RespondWithError(w, 400, fmt.Sprintf("Error parsing JSON: %s", err))
+		return
+	}
+
+	validate := validator.New()
+
+	err = validate.Struct(params)
+	if err != nil {
+		errors := err.(validator.ValidationErrors)
+		helpers.RespondWithError(w, 400, fmt.Sprintf("Bad user input: %s", errors))
 		return
 	}
 
