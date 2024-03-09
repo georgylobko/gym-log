@@ -71,8 +71,6 @@ func TestHandlerCreateMuscleGroup(t *testing.T) {
 
 		apiCfg.HandlerCreateMuscleGroup(w, r, mappers.User{})
 
-		apiCfg.HandlerCreateMuscleGroup(w, r, mappers.User{})
-
 		assert.Equal(t, http.StatusBadRequest, w.Code)
 	})
 
