@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -19,6 +20,9 @@ func TestHandlerGetMuscleGroups(t *testing.T) {
 	}
 	defer d.Close()
 	queries := database.New(d)
+	apiCfg := ApiConfig{
+		DB: queries,
+	}
 
 	t.Run("return muscle groups", func(t *testing.T) {
 		rows := sqlmock.NewRows([]string{"id", "name", "photo_url"}).
@@ -26,17 +30,9 @@ func TestHandlerGetMuscleGroups(t *testing.T) {
 		mock.ExpectQuery("SELECT id, name, photo_url FROM muscle_groups").
 			WillReturnRows(rows)
 
-		req, err := http.NewRequest("GET", "/muscle-groups", nil)
-		if err != nil {
-			t.Fatal(err)
-		}
-
+		r, _ := http.NewRequest("GET", "/muscle-groups", nil)
 		w := httptest.NewRecorder()
-
-		apiCfg := ApiConfig{
-			DB: queries,
-		}
-		apiCfg.HandlerGetMuscleGroups(w, req, mappers.User{})
+		apiCfg.HandlerGetMuscleGroups(w, r, mappers.User{})
 
 		assert.Equal(t, http.StatusOK, w.Code)
 
@@ -50,6 +46,52 @@ func TestHandlerGetMuscleGroups(t *testing.T) {
 			{ID: 1, Name: "Biceps", PhotoUrl: "https://placeholder/biceps.png"},
 		}
 		assert.Equal(t, expectedMuscleGroups, response)
+
+		if err := mock.ExpectationsWereMet(); err != nil {
+			t.Errorf("unfulfilled expectations: %s", err)
+		}
+	})
+}
+
+func TestHandlerCreateMuscleGroup(t *testing.T) {
+	d, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer d.Close()
+	queries := database.New(d)
+	apiCfg := ApiConfig{
+		DB: queries,
+	}
+
+	t.Run("create muscle group", func(t *testing.T) {
+		requestBody := `{"name": "Triceps", "photo_url": "https://placeholder/triceps.png"}`
+		r, _ := http.NewRequest("POST", "/create-muscle-group", bytes.NewBufferString(requestBody))
+		w := httptest.NewRecorder()
+
+		mockMuscleGroup := database.MuscleGroup{
+			ID:       1,
+			Name:     "Triceps",
+			PhotoUrl: "https://placeholder/triceps.png",
+		}
+
+		mock.ExpectQuery("INSERT INTO muscle_groups").
+			WithArgs("Triceps", "https://placeholder/triceps.png").
+			WillReturnRows(sqlmock.NewRows([]string{"id", "name", "photo_url"}).
+				AddRow(mockMuscleGroup.ID, mockMuscleGroup.Name, mockMuscleGroup.PhotoUrl))
+
+		apiCfg.HandlerCreateMuscleGroup(w, r, mappers.User{})
+
+		assert.Equal(t, http.StatusOK, w.Code)
+
+		var response mappers.MuscleGroup
+		err = json.NewDecoder(w.Body).Decode(&response)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		expectedMuscleGroup := mappers.DatabaseMuscleGroupToMuscleGroup(mockMuscleGroup)
+		assert.Equal(t, expectedMuscleGroup, response)
 
 		if err := mock.ExpectationsWereMet(); err != nil {
 			t.Errorf("unfulfilled expectations: %s", err)

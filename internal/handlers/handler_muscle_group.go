@@ -29,7 +29,7 @@ func (apiCfg *ApiConfig) HandlerCreateMuscleGroup(w http.ResponseWriter, r *http
 		PhotoUrl: params.PhotoUrl,
 	})
 	if err != nil {
-		helpers.RespondWithError(w, 400, fmt.Sprintf("Could not create muscle group: %s", err))
+		helpers.RespondWithError(w, 500, fmt.Sprintf("Could not create muscle group: %s", err))
 		return
 	}
 
