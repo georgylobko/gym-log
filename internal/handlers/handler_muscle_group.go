@@ -49,7 +49,7 @@ func (apiCfg *ApiConfig) HandlerCreateMuscleGroup(w http.ResponseWriter, r *http
 func (apiCfg *ApiConfig) HandlerGetMuscleGroups(w http.ResponseWriter, r *http.Request, user mappers.User) {
 	muscleGroups, err := apiCfg.DB.GetMuscleGroups(r.Context())
 	if err != nil {
-		helpers.RespondWithError(w, 400, fmt.Sprintf("Could not get muscle groups: %s", err))
+		helpers.RespondWithError(w, 500, fmt.Sprintf("Could not get muscle groups: %s", err))
 		return
 	}
 

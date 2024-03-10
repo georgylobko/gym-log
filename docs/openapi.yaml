@@ -1,0 +1,19 @@
+openapi: 3.0.0
+info:
+  title: Gym logs API
+  version: 1.0.0
+paths:
+  /v1/muscle-groups:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'components.yaml#/components/schemas/MuscleGroup'
+        '500':
+          description: Internal Server Error
+          
