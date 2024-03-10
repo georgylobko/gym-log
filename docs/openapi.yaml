@@ -5,6 +5,27 @@ info:
 servers:
   - url: http://localhost:5000/v1
 paths:
+  /login:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'components.yaml#/components/schemas/User'
+        '500':
+          description: Internal Server Error
   /muscle-groups:
     get:
       responses:

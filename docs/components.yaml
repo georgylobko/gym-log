@@ -1,5 +1,18 @@
 components:
   schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        gender:
+          type: string
+        role: 
+          type: string
+        email:
+          type: string
     MuscleGroup:
       type: object
       properties:
@@ -9,4 +22,3 @@ components:
           type: string
         photo_url:
           type: string
-          
