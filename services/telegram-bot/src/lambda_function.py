@@ -9,6 +9,7 @@ from handlers.set_handler import set_handler
 from handlers.start_handler import start_handler
 from handlers.get_exercise_history_handler import get_exercise_history_handler
 from handlers.search_exercise_handler import search_exercise_handler
+from handlers.summary_handler import summary_handler
 
 
 def get_bot_token() -> str:
@@ -36,6 +37,7 @@ application.add_handler(
 application.add_handler(
     MessageHandler(filters.TEXT & filters.Regex(r"^/search (\w+(?: \w+)*)$"), search_exercise_handler)
 )
+application.add_handler(CommandHandler("summary", summary_handler))
 
 
 def lambda_handler(event, context):
