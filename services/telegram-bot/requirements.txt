@@ -1,0 +1,4 @@
+# Runtime dependencies for the Telegram bot Lambda.
+# Installed into dist/ by build.sh and shipped in the deployment package.
+python-telegram-bot~=21.0
+requests~=2.32

@@ -1,0 +1,20 @@
+[project]
+name = "gym-log-infra"
+version = "0.1.0"
+description = "CDK infrastructure for the gym-log project (Telegram bot + data + future frontend)"
+requires-python = ">=3.12"
+dependencies = [
+    # Pinned to match the locally-installed CDK CLI (cdk 2.178.x). The CLI and
+    # library were version-locked until 2.179, so this lets `cdk` run directly
+    # with no Node/npm CLI pin needed.
+    "aws-cdk-lib>=2.178.0,<2.179.0",
+    "constructs>=10.0.0,<11.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
